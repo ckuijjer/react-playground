@@ -59,16 +59,28 @@ const ShowCThroughBAndC = connect(state => ({ bAndC: state.children }))(
   CThroughBAndC,
 )
 
+class Pure extends React.PureComponent {
+  render() {
+    return (
+      <div style={{ backgroundColor: 'rgba(161,161,255, 0.1)', padding: 16 }}>
+        {this.props.children}
+      </div>
+    )
+  }
+}
+
 class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <div style={{ margin: 32 }}>
+        <div style={{ margin: 32, backgroundColor: 'rgba(255,161,161, 0.1)' }}>
           <ShowState />
           <hr />
-          <ShowA style={{ backgroundColor: '#f99' }} />
-          <ShowB style={{ backgroundColor: '#9f9' }} />
-          <ShowC style={{ backgroundColor: '#99f' }} />
+          <Pure>
+            <ShowA style={{ backgroundColor: '#f99' }} />
+            <ShowB style={{ backgroundColor: '#9f9' }} />
+            <ShowC style={{ backgroundColor: '#99f' }} />
+          </Pure>
           <hr />
           <IncrementA />
           <IncrementB />
