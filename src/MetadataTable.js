@@ -39,6 +39,8 @@ class HasDiscountClass extends React.Component {
   }
 }
 
+const JsonOutput = props => <pre>{JSON.stringify(props, null, 2)}</pre>
+
 const metadata = [
   {
     title: 'item',
@@ -77,12 +79,15 @@ const metadata = [
     dataIndex: ({ discountPercentage }) => discountPercentage > 0,
     render: HasDiscountClass,
   },
-  //   {
-  //     title: 'item and category code',
-  //     render: ({ value }) => {
-  //       console.log(value)`${value.code} - ${value.category.code}`
-  //     },
-  //   },
+  {
+    title: 'item/category code',
+    render: ({ code, category }) => `${code} - ${category.code}`,
+  },
+  {
+    title: 'item/category code dataIndex',
+    dataIndex: ({ code, category }) => ({ code, categoryCode: category.code }),
+    render: ({ code, categoryCode }) => `${code} - ${categoryCode}`,
+  },
 ]
 
 const isObject = x => x === Object(x)
@@ -107,8 +112,6 @@ const Table = ({ metadata, data }) => {
                     : _.get(d, dataIndex)
 
                 const props = isObject(value) ? value : { value }
-
-                console.log('props', props)
 
                 return (
                   <td
