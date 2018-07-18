@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "emotion": "^9.2.6",
     "lodash": "^4.17.10",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-emotion": "^9.2.6",
     "react-loadable": "^5.4.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",

@@ -1,5 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
+import styled from 'react-emotion'
 
 const data = [
   {
@@ -39,12 +40,23 @@ class HasDiscountClass extends React.Component {
   }
 }
 
+const Bold = styled('div')({ fontWeight: 'bold' })
+
 const JsonOutput = props => <pre>{JSON.stringify(props, null, 2)}</pre>
 
 const metadata = [
   {
     title: 'item',
     render: CodeAndDescription,
+  },
+  {
+    title: 'item code',
+    dataIndex: 'code',
+  },
+  {
+    title: 'item code bold',
+    dataIndex: ({ code }) => ({ children: code }),
+    render: Bold, // I would prefer to use Bold without the dataIndex function to map it to children
   },
   {
     title: 'category code',
@@ -67,6 +79,11 @@ const metadata = [
   {
     title: 'discounted price',
     dataIndex: ({ price, discountPercentage = 0 }) =>
+      (price * (100 - discountPercentage)) / 100,
+  },
+  {
+    title: 'discounted price render',
+    render: ({ price, discountPercentage = 0 }) =>
       (price * (100 - discountPercentage)) / 100,
   },
   {
@@ -106,6 +123,7 @@ const Table = ({ metadata, data }) => {
                 dataIndex = x => x,
                 render: ComponentOrFunction = ({ value }) => value,
               }) => {
+                // I wonder if value should be value, children or data?
                 const value =
                   typeof dataIndex === 'function'
                     ? dataIndex(d)
