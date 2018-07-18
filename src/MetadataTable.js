@@ -25,7 +25,19 @@ const data = [
 
 const CodeAndDescription = ({ code, description }) => `${code} - ${description}`
 
-const HasDiscount = x => (x ? 'yes' : 'no')
+class CodeAndDescriptionClass extends React.Component {
+  render() {
+    return `${this.props.code} - ${this.props.description}`
+  }
+}
+
+const HasDiscount = ({ value }) => (value ? 'yes' : 'no')
+
+class HasDiscountClass extends React.Component {
+  render() {
+    return this.props.value ? 'yes' : 'no'
+  }
+}
 
 const metadata = [
   {
@@ -33,13 +45,22 @@ const metadata = [
     render: CodeAndDescription,
   },
   {
-    title: 'price',
-    dataIndex: 'price',
+    title: 'category code',
+    dataIndex: 'category.code',
   },
   {
     title: 'category',
     dataIndex: 'category',
     render: CodeAndDescription,
+  },
+  {
+    title: 'category class',
+    dataIndex: 'category',
+    render: CodeAndDescriptionClass,
+  },
+  {
+    title: 'price',
+    dataIndex: 'price',
   },
   {
     title: 'discounted price',
@@ -51,28 +72,60 @@ const metadata = [
     dataIndex: ({ discountPercentage }) => discountPercentage > 0,
     render: HasDiscount,
   },
+  {
+    title: 'has discount class',
+    dataIndex: ({ discountPercentage }) => discountPercentage > 0,
+    render: HasDiscountClass,
+  },
+  //   {
+  //     title: 'item and category code',
+  //     render: ({ value }) => {
+  //       console.log(value)`${value.code} - ${value.category.code}`
+  //     },
+  //   },
 ]
+
+const isObject = x => x === Object(x)
 
 const Table = ({ metadata, data }) => {
   return (
     <table>
-      <thead>{metadata.map(({ title }) => <td>{title}</td>)}</thead>
-      {data.map(d => (
-        <tr>
-          {metadata.map(({ dataIndex = x => x, render = x => x }) => {
-            const value =
-              typeof dataIndex === 'function'
-                ? dataIndex(d)
-                : _.get(d, dataIndex)
+      <thead>
+        <tr>{metadata.map(({ title }) => <th>{title}</th>)}</tr>
+      </thead>
+      <tbody>
+        {data.map(d => (
+          <tr>
+            {metadata.map(
+              ({
+                dataIndex = x => x,
+                render: ComponentOrFunction = ({ value }) => value,
+              }) => {
+                const value =
+                  typeof dataIndex === 'function'
+                    ? dataIndex(d)
+                    : _.get(d, dataIndex)
 
-            return (
-              <td style={{ border: '1px solid #ccc', padding: 4, margin: 1 }}>
-                {render(value, data)}
-              </td>
-            )
-          })}
-        </tr>
-      ))}
+                const props = isObject(value) ? value : { value }
+
+                console.log('props', props)
+
+                return (
+                  <td
+                    style={{ border: '1px solid #ccc', padding: 4, margin: 1 }}
+                  >
+                    {ComponentOrFunction.prototype.render ? (
+                      <ComponentOrFunction {...props} />
+                    ) : (
+                      ComponentOrFunction(props)
+                    )}
+                  </td>
+                )
+              },
+            )}
+          </tr>
+        ))}
+      </tbody>
     </table>
   )
 }

@@ -10,12 +10,13 @@ const MenuAndRoutes = () => (
   <Router>
     <Fragment>
       {examples.map(x => (
-        <Link to={`/${x}`}>
+        <Link to={`/${x}`} key={x}>
           <button>{x}</button>
         </Link>
       ))}
       {examples.map(x => (
         <Route
+          key={x}
           path={`/${x}`}
           component={Loadable({
             loader: () => import(`./${x}`),
