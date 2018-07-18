@@ -25,7 +25,7 @@ const data = [
 
 const CodeAndDescription = ({ code, description }) => `${code} - ${description}`
 
-const HasDiscount = ({ children }) => (children ? 'yes' : 'no')
+const HasDiscount = x => (x ? 'yes' : 'no')
 
 const metadata = [
   {
