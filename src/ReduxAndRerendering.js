@@ -3,6 +3,7 @@ import { Provider, connect } from 'react-redux'
 
 import store from './store'
 import { incrementA, incrementB, incrementC } from './store/reducers'
+import BigNumber from './BigNumber'
 
 // const diagram = `
 // {
@@ -32,14 +33,6 @@ const IncrementC = connect(
   null,
   dispatch => ({ onClick: () => dispatch(incrementC()) }),
 )(({ onClick, children }) => <button onClick={onClick}>Increment C</button>)
-
-const BigNumber = ({ number, style }) => (
-  <span
-    style={{ padding: 16, fontSize: 32, display: 'inline-block', ...style }}
-  >
-    {number}
-  </span>
-)
 
 const ShowA = connect(state => ({ number: state.a }))(BigNumber)
 

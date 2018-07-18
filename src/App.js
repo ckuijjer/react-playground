@@ -2,7 +2,12 @@ import React, { Component, Fragment } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import Loadable from 'react-loadable'
 
-const examples = ['LifeCycle', 'ReduxAndRerendering', 'MetadataTable']
+const examples = [
+  'LifeCycle',
+  'ReduxAndRerendering',
+  'MetadataTable',
+  'SetStateSameValue',
+]
 
 const MenuAndRoutes = () => (
   <Router>
