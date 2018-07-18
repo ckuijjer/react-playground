@@ -1,18 +1,18 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Provider, connect } from 'react-redux'
 
 import store from './store'
 import { incrementA, incrementB, incrementC } from './store/reducers'
 
-const diagram = `
-{
-  a: 0,
-  children: {
-    b: 0,
-    c: 0
-  }
-}
-`
+// const diagram = `
+// {
+//   a: 0,
+//   children: {
+//     b: 0,
+//     c: 0
+//   }
+// }
+// `
 
 const ShowJSON = ({ json }) => <pre>{JSON.stringify(json, null, 2)}</pre>
 

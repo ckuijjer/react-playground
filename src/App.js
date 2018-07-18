@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from 'react'
-import { Provider, connect } from 'react-redux'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import Loadable from 'react-loadable'
-import _ from 'lodash'
 
 const examples = ['LifeCycle', 'ReduxAndRerendering', 'MetadataTable']
 
