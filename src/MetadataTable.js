@@ -40,6 +40,38 @@ class HasDiscountClass extends React.Component {
   }
 }
 
+class Counter extends React.Component {
+  id: null
+
+  state = {
+    counter: 0,
+  }
+
+  componentDidMount() {
+    this.id = window.setInterval(this.onTick, 1000)
+    console.log('Counter componentDidMount', this.id)
+  }
+
+  componentWillUnmount() {
+    console.log('Counter componentWillUnmount', this.id)
+    window.clearInterval(this.id)
+  }
+
+  onTick = () => {
+    this.setState(state => ({
+      counter: state.counter >= 9 ? 0 : state.counter + 1,
+    }))
+  }
+
+  render() {
+    return (
+      <div>
+        {this.props.price} - {this.state.counter}
+      </div>
+    )
+  }
+}
+
 const Bold = styled('div')({ fontWeight: 'bold' })
 
 const JsonOutput = props => <pre>{JSON.stringify(props, null, 2)}</pre>
@@ -105,50 +137,95 @@ const metadata = [
     dataIndex: ({ code, category }) => ({ code, categoryCode: category.code }),
     render: ({ code, categoryCode }) => `${code} - ${categoryCode}`,
   },
+  {
+    title: 'counter',
+    render: Counter,
+  },
+  {
+    title: 'counter fn',
+    render: props => <Counter {...props} />,
+  },
 ]
 
 const isObject = x => x === Object(x)
 
-const Table = ({ metadata, data }) => {
-  return (
-    <table>
-      <thead>
-        <tr>{metadata.map(({ title }) => <th>{title}</th>)}</tr>
-      </thead>
-      <tbody>
-        {data.map(d => (
-          <tr>
-            {metadata.map(
-              ({
-                dataIndex = x => x,
-                render: ComponentOrFunction = ({ value }) => value,
-              }) => {
-                // I wonder if value should be value, children or data?
-                const value =
-                  typeof dataIndex === 'function'
-                    ? dataIndex(d)
-                    : _.get(d, dataIndex)
+class Table extends React.Component {
+  id: null
 
-                const props = isObject(value) ? value : { value }
+  state = {
+    data: this.props.data,
+  }
 
-                return (
-                  <td
-                    style={{ border: '1px solid #ccc', padding: 4, margin: 1 }}
-                  >
-                    {ComponentOrFunction.prototype.render ? (
-                      <ComponentOrFunction {...props} />
-                    ) : (
-                      ComponentOrFunction(props)
-                    )}
-                  </td>
-                )
-              },
-            )}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )
+  componentDidMount() {
+    this.id = window.setInterval(this.onTick, 3333)
+    console.log('Table componentDidMount', this.id)
+  }
+
+  componentWillUnmount() {
+    console.log('Table componentWillUnmount', this.id)
+    window.clearInterval(this.id)
+  }
+
+  onTick = () => {
+    this.setState(state => {
+      // nasty price increase by directly touching the data
+      state.data.forEach(
+        x =>
+          (x.price =
+            Math.round(100 * (x.price * (1 + (Math.random() * 2 - 1) / 100))) /
+            100),
+      ) // random -1% to 1% price change
+      return { data: state.data }
+    })
+  }
+
+  render() {
+    console.log('Table render')
+
+    return (
+      <table>
+        <thead>
+          <tr>{this.props.metadata.map(({ title }) => <th>{title}</th>)}</tr>
+        </thead>
+        <tbody>
+          {this.state.data.map(d => (
+            <tr>
+              {this.props.metadata.map(
+                ({
+                  dataIndex = x => x,
+                  render: ComponentOrFunction = ({ value }) => value,
+                }) => {
+                  // I wonder if value should be value, children, text or data?
+                  const value =
+                    typeof dataIndex === 'function'
+                      ? dataIndex(d)
+                      : _.get(d, dataIndex)
+
+                  const props = isObject(value) ? value : { value }
+
+                  return (
+                    <td
+                      style={{
+                        border: '1px solid #ccc',
+                        padding: 4,
+                        margin: 1,
+                      }}
+                    >
+                      {ComponentOrFunction.prototype.render ? (
+                        <ComponentOrFunction {...props} />
+                      ) : (
+                        ComponentOrFunction(props)
+                      )}
+                    </td>
+                  )
+                },
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
 }
 
 const MetadataTable = () => <Table data={data} metadata={metadata} />
