@@ -7,6 +7,7 @@ const examples = [
   'ReduxAndRerendering',
   'MetadataTable',
   'SetStateSameValue',
+  'ChildrenProps',
 ]
 
 const MenuAndRoutes = () => (
